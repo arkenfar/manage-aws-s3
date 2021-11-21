@@ -1,7 +1,6 @@
 import logging
 from s3 import getAllBuckets
 from logger import logger
-import json
 
 s3bucket = "backup-bucket-remove-later"
 maxLogfiles = 10
@@ -18,7 +17,8 @@ def main(s3):
             print(bucketName)
             buckets.append(bucketName)
 
-        logging.info("Successfully got s3 " + str(len(buckets)))
+        logging.info("Successfully found a total of " +
+                     str(len(buckets)) + " s3 buckets")
     except Exception as E:
         logging.error(u'Exception: {0}'.format(str(E)))
         raise
