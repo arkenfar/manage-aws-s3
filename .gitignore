@@ -140,3 +140,7 @@ cython_debug/
 # Logs
 _log/*
 _log/*.log
+
+# Secrets
+secrets.yml
+

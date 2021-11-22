@@ -4,22 +4,22 @@ import datetime
 import glob
 from sys import platform
 
-logFilesExtension = '.log'
-logDateTimeFormat = '%d%m%Y_%H%M%S'
+LOG_EXTENTSION = '.log'
+LOG_DATE_TIME_FORMAT = '%d%m%Y_%H%M%S'
 
 
 def path():
     try:
-        if operatinSystem() == "windows":
-            fn = ".\\_log\\"
+        if operating_system() == "windows":
+            file_path = ".\\_log\\"
         else:
-            fn = "./_log/"
-        return fn
-    except Exception as E:
-        raise
+            file_path = "./_log/"
+        return file_path
+    except Exception as err_path:
+        raise err_path
 
 
-def operatinSystem():
+def operating_system():
     try:
         if platform == "linux" or platform == "linux2":
             return "linux"
@@ -27,57 +27,64 @@ def operatinSystem():
             return "osx"
         elif platform == "win32":
             return "windows"
-    except Exception as E:
-        raise
+    except Exception as err_os:
+        raise err_os
 
 
-def cleanUp(max_logfiles):
+def clean_up(max_logfiles):
     try:
-        x = 0
-        logPath = path()
-        files = sorted(glob.glob(logPath + "*" + logFilesExtension))
-        logging.info(str(len(files)) + " " +
-                     logFilesExtension + " file(s) in " + logPath)
+        counter = 0
+        log_path = path()
+        files = sorted(glob.glob(log_path + "*" + LOG_EXTENTSION))
+        log_msg = f"'{0}' '{1}' file(s) in log path '{2}'".format(
+            str(len(files)), LOG_EXTENTSION, log_path)
+        logging.info(log_msg)
 
         if len(files) < max_logfiles:
-            logging.info("The limit of " + str(max_logfiles) +
-                         " "+logFilesExtension + " files hasn't been reached")
+            log_msg = f"The limit of '{0}' '{1}' files hasn't been reached yet".format(
+                str(max_logfiles), LOG_EXTENTSION)
+            logging.info(log_msg)
             return
         else:
-            y = len(files) - max_logfiles
+            log_to_cleanup = len(files) - max_logfiles
 
-        if y < 1:
-            print("no files needed cleanup")
+        if log_to_cleanup < 1:
+            log_msg = "No log files needs to be removed".format(
+            )
+            logging.info(log_msg)
             return
         else:
-            filesToRemove = files[:y]
-            print(len(filesToRemove))
-            logging.info(str(len(filesToRemove)) +
-                         logFilesExtension + " file(s) to be removed")
+            files_to_remove = files[:log_to_cleanup]
+            log_msg = f"'{0}' '{1}' file(s) to be removed".format(
+                str(len(files_to_remove)), LOG_EXTENTSION)
+            logging.info(log_msg)
 
-        for file in filesToRemove:
+        for file in files_to_remove:
             try:
                 os.remove(file)
-                logging.info(logFilesExtension + " '" +
-                             file + "' successfully removed")
-                x += 1
-            except Exception as E:
-                logging.error(u'Clean up exception: {0}'.format(str(E)))
-                raise
-        print("Cleaned up " + str(x) + " log file(s)")
-        logging.info("Removed " + str(x) + " log file(s)")
+                log_msg = f"'{0}' successfully removed".format(
+                    LOG_EXTENTSION, file)
+                logging.info(log_msg)
+                counter += 1
+            except Exception as err_cleanup_file:
+                err_msg = f"Clean up exception: {0}".format(err_cleanup_file)
+                logging.error(err_msg)
+                raise err_msg
+        log_msg = f"Removed {0} log file(s)".format(str(counter))
+        logging.info(log_msg)
 
-    except Exception as E:
-        raise
+    except Exception as err_cleanup:
+        raise err_cleanup
 
 
 def logger(max_logfiles):
     try:
         if not os.path.exists(path()):
             os.makedirs(path())
-        logging.basicConfig(filename=path() + datetime.datetime.now(
-        ).strftime(logDateTimeFormat) + logFilesExtension, level=logging.DEBUG, format='%(asctime)s;%(levelname)s;%(message)s')
-        cleanUp(max_logfiles)
-    except Exception as E:
-        logging.error(u'Logger exception: {0}'.format(str(E)))
-        raise
+
+        logging.basicConfig(filename=path() + datetime.datetime.now().strftime(LOG_DATE_TIME_FORMAT) +
+                            LOG_EXTENTSION, level=logging.DEBUG, format='%(asctime)s;%(levelname)s;%(message)s')
+        clean_up(max_logfiles)
+    except Exception as err_logger:
+        logging.error("Logger exception: %s", str(err_logger))
+        raise err_logger
