@@ -4,7 +4,7 @@
 
 ---
 
-## Use requirements.txt file
+## Install packages from requirements.txt file
 
 ```
 pip install -r requirements.txt

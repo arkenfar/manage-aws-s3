@@ -137,10 +137,12 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-# Logs
-_log/*
-_log/*.log
-
 # Secrets
 secrets.yml
+
+# Ignore content of folders used for testing and debug
+_log/*
+_log/*.log
+temp/*
+test/*
 
